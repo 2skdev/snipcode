@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { AiOutlineSearch, AiOutlineBell } from "react-icons/ai";
 import GoogleIcon from "@/assets/google.svg";
 import Logo from "@/assets/logo.svg";
@@ -7,7 +7,7 @@ import Modal from "@/components/modal";
 
 const Header = (): JSX.Element => {
   const router = useRouter();
-  const [signin, setSignin] = useState(false);
+  const { status } = useSession();
 
   return (
     <>
@@ -25,28 +25,33 @@ const Header = (): JSX.Element => {
           >
             <AiOutlineSearch size={24} />
           </button>
-          <button
-            className="btn-text-secondary ml-3"
-            onClick={() => {
-              router.push("/notify");
-            }}
-          >
-            <AiOutlineBell size={24} />
-          </button>
 
-          {signin ? (
-            <button
-              className="btn-primary ml-3 px-3 py-1"
-              onClick={() => router.push("/new")}
-            >
-              ポスト
-            </button>
+          {status === "authenticated" ? (
+            <>
+              <button
+                className="btn-text-secondary ml-3"
+                onClick={() => {
+                  router.push("/notify");
+                }}
+              >
+                <AiOutlineBell size={24} />
+              </button>
+              <button
+                className="btn-primary ml-3 px-3 py-1"
+                onClick={() => router.push("/new")}
+              >
+                ポスト
+              </button>
+            </>
           ) : (
             <Modal label="ログイン">
               <div className="flex flex-col items-center m-5">
                 <Logo />
 
-                <button className="btn-secondary flex items-center p-2 my-5 shadow">
+                <button
+                  className="btn-secondary flex items-center p-2 my-5 shadow"
+                  onClick={() => signIn("google")}
+                >
                   <GoogleIcon />
                   <div className="ml-2">Sign in with Google</div>
                 </button>
