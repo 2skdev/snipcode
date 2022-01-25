@@ -6,7 +6,7 @@ const Footer = (): JSX.Element => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 max-w-screen-sm mx-auto py-8">
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4 max-w-screen-md mx-auto py-8">
         <button
           className="col-span-1 md:col-span-2 place-self-center"
           onClick={() => router.push("/")}
@@ -37,6 +37,14 @@ const Footer = (): JSX.Element => {
           }}
         >
           プライバシーポリシー
+        </button>
+        <button
+          className="btn-text-secondary text-xs"
+          onClick={() => {
+            router.push("/docs/api");
+          }}
+        >
+          API
         </button>
         <button
           className="btn-text-secondary text-xs"
