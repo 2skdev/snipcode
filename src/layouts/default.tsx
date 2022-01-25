@@ -1,3 +1,5 @@
+import Header from "@/components/header";
+
 type Props = {
   children: React.ReactNode;
 };
@@ -5,7 +7,10 @@ type Props = {
 const Default = ({ children }: Props): JSX.Element => {
   return (
     <>
-      <main className="p-2">{children}</main>
+      <header>
+        <Header />
+      </header>
+      <main className="bg-gray-200">{children}</main>
     </>
   );
 };
