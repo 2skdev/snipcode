@@ -9,6 +9,15 @@
           "@": "./src/"
         }
       }
+    ],
+    [
+      "prismjs",
+      {
+        "languages": ["javascript", "css", "html", "c"],
+        "plugins": ["show-language"],
+        "theme": "tomorrow",
+        "css": true
+      }
     ]
   ]
 }
