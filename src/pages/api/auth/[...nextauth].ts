@@ -9,9 +9,10 @@ const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      // todo: add to database
-      return true;
+    async redirect({ url, baseUrl }) {
+      // check register
+      const registerd = false;
+      return registerd ? url : "/register";
     },
   },
   secret: process.env.SECRET || "",

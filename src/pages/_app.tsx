@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
+import { AuthProvider } from "@/contexts/auth";
 
 const App = ({
   Component,
@@ -8,7 +9,9 @@ const App = ({
 }: AppProps): JSX.Element => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </SessionProvider>
   );
 };

@@ -4,10 +4,12 @@ import { AiOutlineSearch, AiOutlineBell } from "react-icons/ai";
 import GoogleIcon from "@/assets/google.svg";
 import Logo from "@/assets/logo.svg";
 import Modal from "@/components/modal";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/auth";
 
 const Header = (): JSX.Element => {
   const router = useRouter();
-  const { status } = useSession();
+  const { login } = useContext(AuthContext);
 
   return (
     <>
@@ -26,7 +28,7 @@ const Header = (): JSX.Element => {
             <AiOutlineSearch size={24} />
           </button>
 
-          {status === "authenticated" ? (
+          {login ? (
             <>
               <button
                 className="btn-text-secondary ml-3"
