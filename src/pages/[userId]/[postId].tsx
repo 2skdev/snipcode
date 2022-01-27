@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import Prism from "prismjs";
+import { useState } from "react";
 import { AiOutlineHeart, AiFillHeart, AiOutlineTwitter } from "react-icons/ai";
 import {
   MdOutlineEditNote,
@@ -9,14 +8,11 @@ import {
   MdContentCopy,
 } from "react-icons/md";
 import Default from "@/layouts/default";
+import Code from "@/components/code";
 
 const Post = (): JSX.Element => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    Prism.highlightAll();
-    setMounted(true);
-  });
+  const [like, setLike] = useState(false);
+  const [bookmark, setBookmark] = useState(false);
 
   const copy = () => {
     // todo: execute copy
@@ -39,11 +35,25 @@ const Post = (): JSX.Element => {
           <div className="flex w-full mt-4">
             <div className="hidden sm:block">
               <div className="mr-2 flex flex-col sticky top-10">
-                <button className="text-gray-400 hover:text-gray-500">
-                  <AiOutlineHeart size={24} />
+                <button
+                  className="text-gray-400 hover:text-gray-500"
+                  onClick={() => setLike(!like)}
+                >
+                  {like ? (
+                    <AiFillHeart size={24} className="fill-red-400" />
+                  ) : (
+                    <AiOutlineHeart size={24} />
+                  )}
                 </button>
-                <button className="text-gray-400 hover:text-gray-500 mt-2">
-                  <MdOutlineBookmarkAdd size={24} />
+                <button
+                  className="text-gray-400 hover:text-gray-500 mt-2"
+                  onClick={() => setBookmark(!bookmark)}
+                >
+                  {bookmark ? (
+                    <MdBookmarkAdded size={24} className="fill-orange-400" />
+                  ) : (
+                    <MdOutlineBookmarkAdd size={24} />
+                  )}
                 </button>
                 <button
                   className="text-gray-400 hover:text-gray-500 mt-2"
@@ -62,11 +72,7 @@ const Post = (): JSX.Element => {
                 Snippet
               </div>
               <div onClick={copy}>
-                {mounted && (
-                  <pre className="rounded">
-                    <code className="language-css">{"p { margin: 1px };"}</code>
-                  </pre>
-                )}
+                <Code code={"p { margin: 1px };"} />
               </div>
 
               <div className="mt-6 border-b border-gray-300 font-bold text-lg text-gray-700">

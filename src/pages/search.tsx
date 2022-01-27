@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { AiOutlineSearch, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { MdBookmarkAdded, MdOutlineBookmarkAdd } from "react-icons/md";
 import Default from "@/layouts/default";
-import { AiOutlineSearch, AiOutlineHeart } from "react-icons/ai";
+import Code from "@/components/code";
 
 const Card = (): JSX.Element => {
   const router = useRouter();
+  const [show, setShow] = useState(false);
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+
+  const [like, setLike] = useState(false);
+  const [bookmark, setBookmark] = useState(false);
 
   return (
     <>
@@ -14,7 +24,20 @@ const Card = (): JSX.Element => {
           router.push("/hoge/hogehoge");
         }}
       >
-        <div className="font-bold text-2xl text-gray-700">title</div>
+        <div
+          className="font-bold text-2xl text-gray-700"
+          onMouseEnter={() => {
+            setShow(true);
+          }}
+          onMouseLeave={() => {
+            setShow(false);
+          }}
+          onMouseMove={(e) => {
+            setPosition({ x: e.clientX, y: e.clientY });
+          }}
+        >
+          title
+        </div>
 
         <div className="flex items-center">
           <button
@@ -39,10 +62,46 @@ const Card = (): JSX.Element => {
           >
             Python
           </button>
-          <AiOutlineHeart className="ml-1 text-gray-500" />
-          <div className="text-sm text-gray-500">10</div>
+
+          <button
+            className="flex items-center text-gray-400 hover:text-gray-500 ml-2"
+            onClick={(e) => {
+              setLike(!like);
+              e.stopPropagation();
+            }}
+          >
+            {like ? (
+              <AiFillHeart size={20} className="fill-red-400" />
+            ) : (
+              <AiOutlineHeart size={20} />
+            )}
+            <div className="text-sm text-gray-400">10</div>
+          </button>
+
+          <button
+            className="text-gray-400 hover:text-gray-500 ml-2"
+            onClick={(e) => {
+              setBookmark(!bookmark);
+              e.stopPropagation();
+            }}
+          >
+            {bookmark ? (
+              <MdBookmarkAdded size={20} className="fill-orange-400" />
+            ) : (
+              <MdOutlineBookmarkAdd size={20} />
+            )}
+          </button>
         </div>
       </div>
+
+      {show && (
+        <div
+          className="pointer-events-none fixed rounded opacity-90 text-white"
+          style={{ left: position.x, top: position.y }}
+        >
+          <Code code={"p { margin: 1px };"} />
+        </div>
+      )}
     </>
   );
 };
@@ -103,11 +162,9 @@ const Search = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="mt-2 divide-y divide-gray-200">
+          <div className="mt-2">
             <Card />
-            <Card />
-            <Card />
-            <Card />
+            <div className="border-t" />
           </div>
         </div>
       </Default>
