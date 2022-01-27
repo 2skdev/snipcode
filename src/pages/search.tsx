@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { AiOutlineSearch, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { MdBookmarkAdded, MdOutlineBookmarkAdd } from "react-icons/md";
 import Default from "@/layouts/default";
-import Code from "@/components/code";
 
 const Card = (): JSX.Element => {
   const router = useRouter();
@@ -15,6 +14,8 @@ const Card = (): JSX.Element => {
 
   const [like, setLike] = useState(false);
   const [bookmark, setBookmark] = useState(false);
+
+  const html = "<div>hoge</div>";
 
   return (
     <>
@@ -99,7 +100,7 @@ const Card = (): JSX.Element => {
           className="pointer-events-none fixed rounded opacity-90 text-white"
           style={{ left: position.x, top: position.y }}
         >
-          <Code code={"p { margin: 1px };"} />
+          <div dangerouslySetInnerHTML={{ __html: html }}></div>
         </div>
       )}
     </>

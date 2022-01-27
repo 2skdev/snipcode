@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.shiki {
+  @apply rounded px-4 py-3;
+}
+
 .btn-primary {
   @apply bg-orange-400 hover:bg-orange-300 text-white rounded;
 }

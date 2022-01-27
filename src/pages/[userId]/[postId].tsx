@@ -8,11 +8,12 @@ import {
   MdContentCopy,
 } from "react-icons/md";
 import Default from "@/layouts/default";
-import Code from "@/components/code";
 
 const Post = (): JSX.Element => {
   const [like, setLike] = useState(false);
   const [bookmark, setBookmark] = useState(false);
+
+  const html = "<div>hoge</div>";
 
   const copy = () => {
     // todo: execute copy
@@ -72,7 +73,7 @@ const Post = (): JSX.Element => {
                 Snippet
               </div>
               <div onClick={copy}>
-                <Code code={"p { margin: 1px };"} />
+                <div dangerouslySetInnerHTML={{ __html: html }}></div>
               </div>
 
               <div className="mt-6 border-b border-gray-300 font-bold text-lg text-gray-700">
