@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Default from "@/layouts/default";
 import { AiOutlineSearch, AiOutlineHeart } from "react-icons/ai";
@@ -47,15 +48,40 @@ const Card = (): JSX.Element => {
 };
 
 const Search = (): JSX.Element => {
+  const router = useRouter();
+
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    if (router.query.q !== undefined) {
+      if (!Array.isArray(router.query.q)) {
+        setInput(router.query.q);
+      }
+    }
+  }, [router.query.q]);
+
+  const search = () => {
+    if (input.length > 0) {
+      router.push(`/search?q=${input}`);
+    }
+  };
+
   return (
     <>
       <Default>
         <div className="py-8">
           <div className="relative flex items-center px-2">
-            <input className="z-0 w-full px-6 py-3 rounded-full border shadow focus:outline-none text-gray-700" />
+            <input
+              className="z-0 w-full px-6 py-3 rounded-full border shadow focus:outline-none text-gray-700"
+              value={input}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") search();
+              }}
+              onChange={(e) => setInput(e.target.value)}
+            />
             <button
               className="btn-text-secondary absolute right-6"
-              onClick={() => {}}
+              onClick={search}
             >
               <AiOutlineSearch size={24} />
             </button>

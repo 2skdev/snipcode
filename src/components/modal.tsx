@@ -11,10 +11,7 @@ const Modal = ({ label, children }: Props): JSX.Element => {
 
   return (
     <>
-      <button
-        className="btn-primary ml-3 px-3 py-1"
-        onClick={() => setShow(true)}
-      >
+      <button className="btn-primary px-3 py-1" onClick={() => setShow(true)}>
         {label}
       </button>
 

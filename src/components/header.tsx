@@ -4,8 +4,58 @@ import { AiOutlineSearch, AiOutlineBell } from "react-icons/ai";
 import GoogleIcon from "@/assets/google.svg";
 import Logo from "@/assets/logo.svg";
 import Modal from "@/components/modal";
-import { useContext } from "react";
+import { createRef, useContext, useState } from "react";
 import { AuthContext } from "@/contexts/auth";
+
+const SearchInput = (): JSX.Element => {
+  const router = useRouter();
+
+  const ref = createRef<HTMLInputElement>();
+  const [visible, setVisible] = useState(false);
+  const [input, setInput] = useState("");
+
+  const style = () => {
+    return visible ? "bg-gray-200 w-64 px-4" : "bg-transparent w-0";
+  };
+  const search = () => {
+    if (!visible) {
+      setVisible(true);
+      ref.current?.focus();
+    } else {
+      if (input.length > 0) {
+        router.push(`/search?q=${input}`);
+      } else {
+        setVisible(false);
+      }
+    }
+  };
+
+  return (
+    <>
+      <div className="relative flex items-center mr-1">
+        <input
+          ref={ref}
+          placeholder={"キーワードを入力"}
+          className={
+            "z-0 transition-all duration-500 py-1 outline-none rounded-full text-gray-700 " +
+            style()
+          }
+          onKeyPress={(e) => {
+            if (e.key === "Enter") search();
+          }}
+          onChange={(e) => setInput(e.target.value)}
+          list="lang"
+        />
+        <button
+          className="btn-text-secondary absolute right-2"
+          onClick={search}
+        >
+          <AiOutlineSearch size={18} />
+        </button>
+      </div>
+    </>
+  );
+};
 
 const Header = (): JSX.Element => {
   const router = useRouter();
@@ -19,27 +69,20 @@ const Header = (): JSX.Element => {
         </button>
 
         <div className="flex items-center">
-          <button
-            className="btn-text-secondary"
-            onClick={() => {
-              router.push("/search");
-            }}
-          >
-            <AiOutlineSearch size={24} />
-          </button>
+          <SearchInput />
 
           {login ? (
             <>
               <button
-                className="btn-text-secondary ml-3"
+                className="btn-text-secondary mr-3"
                 onClick={() => {
                   router.push("/notify");
                 }}
               >
-                <AiOutlineBell size={24} />
+                <AiOutlineBell size={18} />
               </button>
               <button
-                className="btn-primary ml-3 px-3 py-1"
+                className="btn-primary px-3 py-1"
                 onClick={() => router.push("/new")}
               >
                 ポスト
