@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Prism from "prismjs";
 import { AiOutlineHeart, AiFillHeart, AiOutlineTwitter } from "react-icons/ai";
 import {
@@ -11,8 +11,11 @@ import {
 import Default from "@/layouts/default";
 
 const Post = (): JSX.Element => {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     Prism.highlightAll();
+    setMounted(true);
   });
 
   const copy = () => {
@@ -59,9 +62,11 @@ const Post = (): JSX.Element => {
                 Snippet
               </div>
               <div onClick={copy}>
-                <pre className="rounded">
-                  <code className="language-css">{"p { margin: 1px };"}</code>
-                </pre>
+                {mounted && (
+                  <pre className="rounded">
+                    <code className="language-css">{"p { margin: 1px };"}</code>
+                  </pre>
+                )}
               </div>
 
               <div className="mt-6 border-b border-gray-300 font-bold text-lg text-gray-700">
