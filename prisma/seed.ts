@@ -1,14 +1,6 @@
 import { prisma } from "../src/lib/prisma";
 
-const main = async () => {
-  await prisma.post.create({
-    data: {
-      id: "aaa",
-      title: "hoge",
-      userId: "tmp",
-    },
-  });
-};
+const main = async () => {};
 
 main()
   .catch((e) => {
