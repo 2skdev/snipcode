@@ -19,10 +19,16 @@ const MeHandler = async (
         },
       });
 
-      res.status(200).json({ ok: true, data: data?.user });
+      if (data === null) {
+        res.status(404).json({ message: "account not found" });
+      } else {
+        res.status(200).json({ user: data.user });
+      }
     } else {
       res.status(200).json({ ok: false });
     }
+  } else if (req.method == "POST") {
+    res.status(200).json({});
   } else {
     res.status(405).json({});
   }

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { AiOutlineSearch, AiOutlineBell } from "react-icons/ai";
 import GoogleIcon from "@/assets/google.svg";
 import Logo from "@/assets/logo.svg";
@@ -59,7 +59,7 @@ const SearchInput = (): JSX.Element => {
 
 const Header = (): JSX.Element => {
   const router = useRouter();
-  const { login } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   return (
     <>
@@ -71,7 +71,7 @@ const Header = (): JSX.Element => {
         <div className="flex items-center">
           <SearchInput />
 
-          {login ? (
+          {userId !== undefined ? (
             <>
               <button
                 className="btn-text-secondary mr-3"

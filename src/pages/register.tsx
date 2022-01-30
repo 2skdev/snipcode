@@ -1,6 +1,5 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Textarea from "react-textarea-autosize";
 import Logo from "@/assets/logo.svg";
 import Image from "@/assets/soco-st_12260_paint.svg";
@@ -11,10 +10,10 @@ const Register = (): JSX.Element => {
   });
 
   const router = useRouter();
-  const session = useSession();
+  const [bio, setBio] = useState("");
+  const [username, setUsername] = useState("");
 
   const signup = () => {
-    // todo: signup
     router.push("/");
   };
 
@@ -29,6 +28,8 @@ const Register = (): JSX.Element => {
           <input
             className="w-96 mt-1 px-4 py-2 rounded border border-transparent focus:border-orange-500 focus:outline-none text-gray-700"
             placeholder="@"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
 
@@ -37,6 +38,8 @@ const Register = (): JSX.Element => {
           <Textarea
             className="w-96 mt-1 px-4 py-2 rounded border border-transparent focus:border-orange-500 focus:outline-none text-gray-700 resize-none overflow-y-auto"
             placeholder="bio"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
           />
         </div>
 

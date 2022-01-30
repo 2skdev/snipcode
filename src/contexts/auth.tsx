@@ -3,34 +3,43 @@ import { createContext, useEffect, useState } from "react";
 import { fetchUser } from "@/lib";
 
 type AuthData = {
-  userid: String | null;
-  login: Boolean;
+  userId: string | undefined;
+  status: "authenticated" | "unauthenticated" | "loading" | undefined;
 };
 
-const AuthContext = createContext<AuthData>({ userid: null, login: false });
+const AuthContext = createContext<AuthData>({
+  userId: undefined,
+  status: undefined,
+});
 
 const AuthProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
-  const [user, setUser] = useState<AuthData>({ userid: "hoge", login: false });
+  const [user, setUser] = useState<AuthData>({
+    userId: undefined,
+    status: undefined,
+  });
   const session = useSession();
 
   useEffect(() => {
-    if (!user.login && session.status === "authenticated") {
-      fetchUser().then(({ ok, me }) => {
-        if (ok) {
-          setUser({
-            userid: me.userid,
-            login: true,
-          });
-        }
-      });
-    } else if (user.login && session.status === "unauthenticated") {
+    if (session.status === "authenticated") {
+      if (user.userId === undefined) {
+        fetchUser().then(({ status, data }) => {
+          let userId = user.userId;
+          if (status === 200) {
+            userId = data.user.id;
+          }
+          setUser({ userId, status: session.status });
+        });
+      } else {
+        setUser({ ...user, status: session.status });
+      }
+    } else if (session.status === "unauthenticated") {
       setUser({
-        userid: null,
-        login: false,
+        userId: undefined,
+        status: session.status,
       });
     }
   }, [session.status]);

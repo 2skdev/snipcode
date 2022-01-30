@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import crypto from "crypto";
 
 const options: NextAuthOptions = {
   providers: [
@@ -9,10 +10,21 @@ const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async session({ session, token }) {
+      if (token.sub) {
+        session.token = crypto
+          .createHash("md5")
+          .update(token.sub)
+          .digest("hex");
+      }
+      return session;
+    },
     async redirect({ url, baseUrl }) {
-      // check register
-      const registerd = false;
-      return registerd ? url : "/register";
+      if (url.match(/redirect/)) {
+        return url;
+      } else {
+        return `/redirect?to=${url.replace(baseUrl, "")}`;
+      }
     },
   },
   secret: process.env.SECRET || "",
