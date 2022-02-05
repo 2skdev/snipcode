@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "@/contexts/auth";
+import { useEffect } from "react";
+import { useAuth } from "@/contexts/auth";
 import { getQueryAsString } from "@/utils/query";
-import { AiOutlineLoading } from "react-icons/ai";
+import Loading from "@/components/loading";
 
 const Authenticated = (): JSX.Element => {
   const router = useRouter();
-  const { userId, status } = useContext(AuthContext);
+  const { userId, status } = useAuth();
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -24,9 +24,7 @@ const Authenticated = (): JSX.Element => {
 
   return (
     <>
-      <div className="w-screen h-screen flex items-center justify-center">
-        <AiOutlineLoading className="animate-spin text-orange-500" size={24} />
-      </div>
+      <Loading />
     </>
   );
 };

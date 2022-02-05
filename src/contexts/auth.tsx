@@ -1,6 +1,9 @@
 import { useSession } from "next-auth/react";
-import { createContext, useEffect, useState } from "react";
-import { fetchUser } from "@/lib";
+import { useRouter } from "next/router";
+import { createContext, useContext, useEffect, useState } from "react";
+import { User } from "@prisma/client";
+import { getMe } from "@/utils/api";
+import Loading from "@/components/loading";
 
 type AuthData = {
   userId: string | undefined;
@@ -22,17 +25,19 @@ const AuthProvider = ({
     status: undefined,
   });
   const session = useSession();
+  const { pathname } = useRouter();
 
   useEffect(() => {
     if (session.status === "authenticated") {
       if (user.userId === undefined) {
-        fetchUser().then(({ status, data }) => {
-          let userId = user.userId;
-          if (status === 200) {
-            userId = data.user.id;
-          }
-          setUser({ userId, status: session.status });
-        });
+        getMe()
+          .then((user: User) => {
+            let userId = user.id;
+            setUser({ userId, status: session.status });
+          })
+          .catch(() => {
+            setUser({ userId: undefined, status: session.status });
+          });
       } else {
         setUser({ ...user, status: session.status });
       }
@@ -42,9 +47,54 @@ const AuthProvider = ({
         status: session.status,
       });
     }
-  }, [session.status]);
+  }, [session.status, pathname]);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 };
 
-export { AuthContext, AuthProvider };
+const useAuth = () => useContext(AuthContext);
+
+const SigninProtect = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element => {
+  const { userId, status } = useAuth();
+  const router = useRouter();
+
+  if (status === "loading") {
+    return <Loading />;
+  } else if (status === "unauthenticated") {
+    router.replace("/login");
+  } else if (status === "authenticated" && userId === undefined) {
+    router.replace("/register");
+  }
+
+  return <>{children}</>;
+};
+const UnregisteredProtect = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element => {
+  const { userId, status } = useAuth();
+  const router = useRouter();
+
+  if (status === "loading") {
+    return <Loading />;
+  } else if (status === "unauthenticated") {
+    router.replace("/login");
+  } else if (status === "authenticated" && userId !== undefined) {
+    router.replace("/");
+  }
+
+  return <>{children}</>;
+};
+
+export {
+  AuthContext,
+  AuthProvider,
+  useAuth,
+  SigninProtect,
+  UnregisteredProtect,
+};

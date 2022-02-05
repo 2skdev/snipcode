@@ -4,8 +4,8 @@ import { AiOutlineSearch, AiOutlineBell } from "react-icons/ai";
 import GoogleIcon from "@/assets/google.svg";
 import Logo from "@/assets/logo.svg";
 import Modal from "@/components/modal";
-import { createRef, useContext, useState } from "react";
-import { AuthContext } from "@/contexts/auth";
+import { createRef, useState } from "react";
+import { useAuth } from "@/contexts/auth";
 
 const SearchInput = (): JSX.Element => {
   const router = useRouter();
@@ -59,7 +59,7 @@ const SearchInput = (): JSX.Element => {
 
 const Header = (): JSX.Element => {
   const router = useRouter();
-  const { userId } = useContext(AuthContext);
+  const { userId } = useAuth();
 
   return (
     <>
