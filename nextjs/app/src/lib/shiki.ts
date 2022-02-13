@@ -143,7 +143,7 @@ const langs: LangInfo[] = [
   { lang: "yaml" },
 ];
 
-const langList = langs.filter((l) => l.lang);
+const langList = langs.map((l) => l.lang);
 const getIcon = (lang: Lang): string | undefined =>
   langs.find((l) => l.lang == lang)?.icon;
 

@@ -44,7 +44,7 @@ const MeHandler = async (
       });
 
       if (data === null) {
-        res.status(404).json({ message: "account create failure" });
+        res.status(404).json(data);
       } else {
         res.status(200).json(user);
       }

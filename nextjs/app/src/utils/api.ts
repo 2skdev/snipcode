@@ -1,4 +1,5 @@
-import { Prisma, User } from "@prisma/client";
+import { CreatePostRequest } from "@/types/request";
+import { Prisma, User, Post } from "@prisma/client";
 
 const request = async <T>(url: string, config: RequestInit): Promise<T> => {
   const res = await fetch(url, config);
@@ -41,6 +42,14 @@ export async function getMe() {
   return await api.get<User>("/api/v1/me");
 }
 
-export async function postMe(user: Prisma.UserCreateInput) {
+export async function createMe(user: Prisma.UserCreateInput) {
   return await api.post<Prisma.UserCreateInput, User>("/api/v1/me", user);
+}
+
+export async function getPost(id: string) {
+  return await api.get<Post>(`/api/v1/posts/${id}`);
+}
+
+export async function createPost(post: CreatePostRequest) {
+  return await api.post<CreatePostRequest, Post>("/api/v1/posts", post);
 }

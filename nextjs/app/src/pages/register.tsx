@@ -4,7 +4,7 @@ import Textarea from "react-textarea-autosize";
 import Logo from "@/assets/logo.svg";
 import Image from "@/assets/soco-st_12260_paint.svg";
 import { UnregisteredProtect } from "@/contexts/auth";
-import { postMe } from "@/utils/api";
+import { createMe } from "@/utils/api";
 
 const Register = (): JSX.Element => {
   const router = useRouter();
@@ -17,7 +17,7 @@ const Register = (): JSX.Element => {
   });
 
   const signup = () => {
-    postMe({ id: username, email: mail, bio: bio }).then(() => {
+    createMe({ id: username, email: mail, bio: bio }).then(() => {
       router.push("/");
     });
   };

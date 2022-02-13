@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { getQueryAsString, getQueryAsNumber } from "@/utils/query";
+import { CreatePostRequest } from "@/types/request";
 
 const random = (length: number): string => {
   const rand = crypto.randomBytes(length >> 1).toString("hex");
@@ -23,17 +25,36 @@ const PostsHandler = async (
     });
     res.status(200).json({ ok: true, data });
   } else if (req.method == "POST") {
-    const data = await prisma.post.create({
-      data: {
-        id: random(16),
-        userId: "hoge",
-        title: req.body.title,
-        language: req.body.language,
-        code: req.body.code,
-        description: req.body.description,
-      },
-    });
-    res.status(200).json({ ok: true, data });
+    const session = await getSession({ req });
+
+    if (session && typeof session.token === "string") {
+      let input = JSON.parse(req.body) as CreatePostRequest;
+
+      const account = await prisma.account.findUnique({
+        where: {
+          id: session.token,
+        },
+      });
+
+      if (account) {
+        const data = await prisma.post.create({
+          data: {
+            id: random(16),
+            userId: account.userId,
+            title: input.title,
+            language: input.language,
+            code: input.code,
+            description: input.description,
+          },
+        });
+
+        res.status(200).json(data);
+      } else {
+        res.status(401).json({ message: "Account is not registerd" });
+      }
+    } else {
+      res.status(401).json({ message: "Token is not exist" });
+    }
   } else {
     res.status(405).json({});
   }

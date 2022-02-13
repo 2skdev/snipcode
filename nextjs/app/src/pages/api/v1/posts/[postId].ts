@@ -7,12 +7,12 @@ const PostsHandler = async (
   res: NextApiResponse
 ): Promise<void> => {
   if (req.method == "GET") {
-    const data = await prisma.post.findFirst({
+    const data = await prisma.post.findUnique({
       where: {
         id: getQueryAsString(req.query.postId),
       },
     });
-    res.status(200).json({ ok: true, data });
+    res.status(200).json(data);
   } else if (req.method == "PUT") {
     const data = await prisma.post.update({
       where: {
