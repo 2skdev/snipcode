@@ -16,4 +16,6 @@ const App = ({
   );
 };
 
+App.getInitialProps = async () => ({ pageProps: {} });
+
 export default App;
