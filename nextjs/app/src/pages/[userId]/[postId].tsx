@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Post as PostType } from "@prisma/client";
 import { AiOutlineHeart, AiFillHeart, AiOutlineTwitter } from "react-icons/ai";
@@ -12,25 +12,38 @@ import {
 import Default from "@/layouts/default";
 import { getPost } from "@/utils/api";
 import { getQueryAsString } from "@/utils/query";
+import { GetServerSideProps } from "next";
+import { highlight } from "@/lib/shiki";
 
-const Post = (): JSX.Element => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (context.query.postId) {
+    const res = await getPost(getQueryAsString(context.query.postId));
+    const code = await highlight({ code: res.code, lang: res.language });
+
+    return {
+      props: {
+        post: res,
+        code,
+      },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+};
+
+const Post = ({
+  post,
+  code,
+}: {
+  post: PostType;
+  code: string;
+}): JSX.Element => {
   const router = useRouter();
 
   const [like, setLike] = useState(false);
   const [bookmark, setBookmark] = useState(false);
-  const [post, setPost] = useState<PostType>();
-
-  const html = "<div>hoge</div>";
-
-  useEffect(() => {
-    console.log(router.query);
-    if (router.query.postId) {
-      getPost(getQueryAsString(router.query.postId)).then((res) => {
-        console.log(res);
-        setPost(res);
-      });
-    }
-  }, []);
 
   const copy = () => {
     // todo: execute copy
@@ -91,8 +104,8 @@ const Post = (): JSX.Element => {
               <div className="border-b border-gray-300 font-bold text-lg text-gray-700">
                 Snippet
               </div>
-              <div onClick={copy}>
-                <div dangerouslySetInnerHTML={{ __html: html }}></div>
+              <div className="mt-2" onClick={copy}>
+                <div dangerouslySetInnerHTML={{ __html: code }}></div>
               </div>
 
               <div className="mt-6 border-b border-gray-300 font-bold text-lg text-gray-700">

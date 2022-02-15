@@ -2,7 +2,7 @@ import { CreatePostRequest } from "@/types/request";
 import { Prisma, User, Post } from "@prisma/client";
 
 const request = async <T>(url: string, config: RequestInit): Promise<T> => {
-  const res = await fetch(url, config);
+  const res = await fetch("http://localhost:3000" + url, config);
 
   if (!res.ok) throw new Error(res.statusText);
   return res.json().catch(() => {});
