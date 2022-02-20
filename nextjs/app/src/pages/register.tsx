@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Textarea from "react-textarea-autosize";
 import Logo from "@/assets/logo.svg";
 import Image from "@/assets/soco-st_12260_paint.svg";
 import { UnregisteredProtect } from "@/contexts/auth";
 import { createMe } from "@/utils/api";
+import Textarea from "@/components/textarea";
 
 const Register = (): JSX.Element => {
   const router = useRouter();
@@ -41,7 +41,7 @@ const Register = (): JSX.Element => {
 
           <div className="mt-5">
             <div className="ml-1 text-gray-500">メールアドレス</div>
-            <Textarea
+            <input
               className="w-96 mt-1 px-4 py-2 rounded border border-transparent focus:border-orange-500 focus:outline-none text-gray-700 resize-none overflow-y-auto"
               placeholder="メールアドレスを入力"
               value={mail}
@@ -55,7 +55,7 @@ const Register = (): JSX.Element => {
               className="w-96 mt-1 px-4 py-2 rounded border border-transparent focus:border-orange-500 focus:outline-none text-gray-700 resize-none overflow-y-auto"
               placeholder="自己紹介を入力"
               value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              onChange={(value) => setBio(value)}
             />
           </div>
 

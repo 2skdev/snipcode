@@ -144,7 +144,7 @@ const langs: LangInfo[] = [
 ];
 
 const langList = langs.map((l) => l.lang);
-const getIcon = (lang: Lang): string | undefined =>
+const getIcon = (lang: string): string | undefined =>
   langs.find((l) => l.lang == lang)?.icon;
 
 const highlight = async ({

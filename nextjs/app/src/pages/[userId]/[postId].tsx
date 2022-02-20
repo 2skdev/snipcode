@@ -13,7 +13,7 @@ import Default from "@/layouts/default";
 import { getPost } from "@/utils/api";
 import { getQueryAsString } from "@/utils/query";
 import { GetServerSideProps } from "next";
-import { highlight } from "@/lib/shiki";
+import { getIcon, highlight } from "@/lib/shiki";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (context.query.postId) {
@@ -45,6 +45,8 @@ const Post = ({
   const [like, setLike] = useState(false);
   const [bookmark, setBookmark] = useState(false);
 
+  const langIcon = getIcon(post?.language);
+
   const copy = () => {
     // todo: execute copy
   };
@@ -56,7 +58,8 @@ const Post = ({
           <div className="font-bold text-3xl text-gray-600">{post?.title}</div>
 
           <div className="flex items-center justify-center">
-            <button className="btn-secondary px-1 text-sm">
+            <button className="btn-secondary flex flex-row items-center px-1 text-sm">
+              {langIcon !== undefined && <i className={"mr-1 " + langIcon} />}
               {post?.language}
             </button>
             <MdOutlineEditNote className="ml-3 text-gray-400" />

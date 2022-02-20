@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { AiFillCaretDown } from "react-icons/ai";
-import Textarea from "react-textarea-autosize";
 import { SigninProtect } from "@/contexts/auth";
 import { createPost } from "@/utils/api";
-import { langList } from "@/lib/shiki";
+import { langList, getIcon } from "@/lib/shiki";
 import { CreatePostRequest } from "@/types/request";
+import Textarea from "@/components/textarea";
 
 const Select = ({
   className,
@@ -19,16 +19,31 @@ const Select = ({
   value: string;
   onChange: (value: string) => void;
 }): JSX.Element => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [search, setSearch] = useState("");
+
   const input = useRef<HTMLInputElement>(null);
+
+  const langIcon = (lang: string): JSX.Element => {
+    const icon = getIcon(lang);
+
+    return (
+      <>
+        {icon !== undefined ? (
+          <i className={"w-5 " + icon}></i>
+        ) : (
+          <div className="w-5"></div>
+        )}
+      </>
+    );
+  };
+
+  const list = options.filter((opt) => ~opt.indexOf(search));
 
   const select = (selected: string) => {
     onChange(selected);
     setOpen(false);
   };
-
-  const list = options.filter((opt) => ~opt.indexOf(search));
 
   const next = () => {
     const index = list.indexOf(value);
@@ -89,7 +104,7 @@ const Select = ({
             {list.map((opt, index) => (
               <button
                 className={[
-                  "px-2 py-1 text-left",
+                  "flex flex-row items-center px-2 py-1 text-left ",
                   index == 0
                     ? "rounded-t"
                     : index == list.length - 1
@@ -102,6 +117,7 @@ const Select = ({
                 key={index}
                 onMouseDown={() => select(opt)}
               >
+                {langIcon(opt)}
                 {opt}
               </button>
             ))}
@@ -123,6 +139,7 @@ const New = (): JSX.Element => {
     title: "",
     language: "",
     code: "",
+    description: "",
   });
 
   const post = () => {
@@ -156,7 +173,7 @@ const New = (): JSX.Element => {
           </nav>
         </header>
 
-        <main className="container md:max-w-screen-md mx-auto py-8 text-gray-700">
+        <main className="container md:max-w-screen-md mx-auto py-8 text-gray-700 selection:bg-gray-300">
           <div className="bg-white rounded shadow-md p-10">
             <div className="flex items-center">
               <div className="text-2xl font-bold">#</div>
@@ -182,10 +199,10 @@ const New = (): JSX.Element => {
                 />
               </div>
               <Textarea
-                className="resize-none focus:outline-none overflow-hidden w-full mt-2 p-2 rounded bg-gray-100"
+                className="resize-none focus:outline-none overflow-hidden w-full mt-2 p-2 rounded font-mono placeholder:font-sans bg-gray-100"
                 placeholder="コードを入力"
                 value={input.code}
-                onChange={(e) => setInput({ ...input, code: e.target.value })}
+                onChange={(value) => setInput({ ...input, code: value })}
               />
               <div>```</div>
             </div>
@@ -196,9 +213,7 @@ const New = (): JSX.Element => {
                 className="resize-none focus:outline-none overflow-hidden w-full p-2 rounded bg-gray-100"
                 placeholder="説明を入力"
                 value={input.description}
-                onChange={(e) =>
-                  setInput({ ...input, description: e.target.value })
-                }
+                onChange={(value) => setInput({ ...input, description: value })}
               />
             </div>
           </div>
